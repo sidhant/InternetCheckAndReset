@@ -46,7 +46,7 @@ def resetRelayBoard():
 if __name__ == "__main__":
 		# Initialize the LCD using the pins
 		lcd = LCD.Adafruit_CharLCDPlate()
-		lcd.set_color(0.0, 0.0, 1.0)
+		lcd.set_color(0.0, 1.0, 1.0)
 		lcd.clear()
 		
 		lcd.message('Checking internet status')
@@ -54,7 +54,7 @@ if __name__ == "__main__":
 		# Chek status of internet. If it returns false (no connection), try N times
 		# more before taking corrective measure.
 		if(is_connected() == False):
-			lcd.message('\n Connection DOWN. Retrying')
+			lcd.message('\n Connection DOWN')
 			for i in range(0,RETRIES-1):
 				# Wait N seconds before trying again
 				time.sleep(RETRY_DELAY)
@@ -63,10 +63,11 @@ if __name__ == "__main__":
 				else:
 					if(i == RETRIES-2): # Final retry
 						lcd.clear()
-						lcd.message('Resetting Relat Board')
+						lcd.message('Resetting Relay')
 						print "Resetting System"
 						resetRelayBoard()
 		else:
 			lcd.message('\n Connection up')
 
-
+		lcd.clear()
+		lcd.message('Last Checked:\n' + time.strftime("%H:%M:%S"))
