@@ -4,9 +4,9 @@ import RPi.GPIO as GPIO
 import Adafruit_CharLCD as LCD
 
 
-REMOTE_SERVER_LIST = {"www.rgoogle.com", "www.bing.com", "www.amazon.com"}
+REMOTE_SERVER_LIST = {"www.google.com", "www.bing.com", "www.amazon.com"}
 RETRIES = 3 				# Number of re-tries before resetting the system
-RETRY_DELAY = 2 		# Time in seconds to wait bewtween retries.
+RETRY_DELAY = 60 		# Time in seconds to wait bewtween retries.
 
 RELAY_PIN = 26
 
