@@ -74,4 +74,4 @@ if __name__ == "__main__":
 			lcd.message('\n Connection up')
 
 		lcd.clear()
-		lcd.message('Last Checked:\n' + time.strftime("%H:%M:%S") + ' ' + retVal)
+		lcd.message('Last Checked:\n' + time.strftime("%H:%M:%S") + ' ' + str(retVal))
