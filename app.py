@@ -1,10 +1,12 @@
 import socket
 import time
 import RPi.GPIO as GPIO
+import Adafruit_CharLCD as LCD
 
-REMOTE_SERVER_LIST = {"www.rgoogle.com", "www.bing.com", "www.amazon.com"}
+
+REMOTE_SERVER_LIST = {"www.google.com", "www.bing.com", "www.amazon.com"}
 RETRIES = 3 				# Number of re-tries before resetting the system
-RETRY_DELAY = 2 		# Time in seconds to wait bewtween retries.
+RETRY_DELAY = 60 		# Time in seconds to wait bewtween retries.
 
 RELAY_PIN = 26
 
@@ -19,8 +21,8 @@ def is_connected():
 				# reachable
 				s = socket.create_connection((host, 80), 2)
 			except:
-		 		pass
-		 		retFlag = False
+				pass
+				retFlag = False
 				
 		return retFlag
 
@@ -40,19 +42,36 @@ def resetRelayBoard():
 	# Turn it back on
 	GPIO.output(RELAY_PIN, GPIO.LOW)
 
+
 if __name__ == "__main__":
-    # Chek status of internet. If it returns false (no connection), try N times
-    # more before taking corrective measure.
-    if(is_connected() == False):
-    	for i in range(0,RETRIES-1):
-    		# Wait N seconds before trying again
-    		time.sleep(RETRY_DELAY)
-    		if(is_connected() == True):
-    			break # Break out of loop if connection is back up
-    		else:
-    			if(i == RETRIES-2): # Final retry
-    				print "Resetting System"
-    				resetRelayBoard()
+		# Initialize the LCD using the pins
+		lcd = LCD.Adafruit_CharLCDPlate()
+		lcd.set_color(0.0, 1.0, 1.0)
+		lcd.clear()
+		
+		lcd.message('Checking internet status')
 
+		retVal = True;
 
+		# Chek status of internet. If it returns false (no connection), try N times
+		# more before taking corrective measure.
+		if(is_connected() == False):
+			lcd.message('\n Connection DOWN')
+			for i in range(0,RETRIES-1):
+				# Wait N seconds before trying again
+				time.sleep(RETRY_DELAY)
+				if(is_connected() == True):
+					break # Break out of loop if connection is back up
+				else:
+					if(i == RETRIES-2): # Final retry
+						lcd.clear()
+						lcd.message('Resetting Relay')
+						print "Resetting System"
+						retVal = False
+						resetRelayBoard()
 
+		else:
+			lcd.message('\n Connection up')
+
+		lcd.clear()
+		lcd.message('Last Checked:\n' + time.strftime("%H:%M:%S") + ' ' + str(retVal))
