@@ -51,6 +51,8 @@ if __name__ == "__main__":
 		
 		lcd.message('Checking internet status')
 
+		retVal = True;
+
 		# Chek status of internet. If it returns false (no connection), try N times
 		# more before taking corrective measure.
 		if(is_connected() == False):
@@ -65,9 +67,11 @@ if __name__ == "__main__":
 						lcd.clear()
 						lcd.message('Resetting Relay')
 						print "Resetting System"
+						retVal = False
 						resetRelayBoard()
+
 		else:
 			lcd.message('\n Connection up')
 
 		lcd.clear()
-		lcd.message('Last Checked:\n' + time.strftime("%H:%M:%S"))
+		lcd.message('Last Checked:\n' + time.strftime("%H:%M:%S") + ' ' + retVal)
