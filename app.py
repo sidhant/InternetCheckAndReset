@@ -21,8 +21,8 @@ def is_connected():
 				# reachable
 				s = socket.create_connection((host, 80), 2)
 			except:
-		 		pass
-		 		retFlag = False
+				pass
+				retFlag = False
 				
 		return retFlag
 
@@ -44,29 +44,29 @@ def resetRelayBoard():
 
 
 if __name__ == "__main__":
-    # Initialize the LCD using the pins
+		# Initialize the LCD using the pins
 		lcd = LCD.Adafruit_CharLCDPlate()
 		lcd.set_color(0.0, 0.0, 1.0)
 		lcd.clear()
 		
 		lcd.message('Checking internet status')
 
-    # Chek status of internet. If it returns false (no connection), try N times
-    # more before taking corrective measure.
-    if(is_connected() == False):
-    	lcd.message('\n Connection DOWN. Retrying')
-    	for i in range(0,RETRIES-1):
-    		# Wait N seconds before trying again
-    		time.sleep(RETRY_DELAY)
-    		if(is_connected() == True):
-    			break # Break out of loop if connection is back up
-    		else:
-    			if(i == RETRIES-2): # Final retry
-    				lcd.clear()
-    				lcd.message('Resetting Relat Board')
-    				print "Resetting System"
-    				resetRelayBoard()
-    else:
-    	lcd.message('\n Connection up')
+		# Chek status of internet. If it returns false (no connection), try N times
+		# more before taking corrective measure.
+		if(is_connected() == False):
+			lcd.message('\n Connection DOWN. Retrying')
+			for i in range(0,RETRIES-1):
+				# Wait N seconds before trying again
+				time.sleep(RETRY_DELAY)
+				if(is_connected() == True):
+					break # Break out of loop if connection is back up
+				else:
+					if(i == RETRIES-2): # Final retry
+						lcd.clear()
+						lcd.message('Resetting Relat Board')
+						print "Resetting System"
+						resetRelayBoard()
+		else:
+			lcd.message('\n Connection up')
 
 
