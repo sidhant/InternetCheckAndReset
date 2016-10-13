@@ -2,7 +2,7 @@ import socket
 import time
 import RPi.GPIO as GPIO
 import Adafruit_CharLCD as LCD
-
+import syslog
 
 REMOTE_SERVER_LIST = {"www.google.com", "www.bing.com", "www.amazon.com"}
 RETRIES = 3 				# Number of re-tries before resetting the system
@@ -35,6 +35,7 @@ def initRelayBoard():
 def resetRelayBoard():
 	initRelayBoard()
 
+	syslog.syslog(syslog.LOG_INFO, "InternetCheckAndReset: Resetting Relay Board")
 	# Reset
 	GPIO.output(RELAY_PIN, GPIO.HIGH)
 	# Wait
@@ -42,6 +43,11 @@ def resetRelayBoard():
 	# Turn it back on
 	GPIO.output(RELAY_PIN, GPIO.LOW)
 
+# Print local Ip address on LCD
+def get_ip_address():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    return s.getsockname()[0]
 
 if __name__ == "__main__":
 		# Initialize the LCD using the pins
@@ -66,7 +72,7 @@ if __name__ == "__main__":
 					if(i == RETRIES-2): # Final retry
 						lcd.clear()
 						lcd.message('Resetting Relay')
-						print "Resetting System"
+						syslog.syslog(syslog.LOG_INFO, "InternetCheckAndReset: All retires failed")
 						retVal = False
 						resetRelayBoard()
 
@@ -74,4 +80,4 @@ if __name__ == "__main__":
 			lcd.message('\n Connection up')
 
 		lcd.clear()
-		lcd.message('Last Checked:\n' + time.strftime("%H:%M:%S") + ' ' + str(retVal))
+		lcd.message(str(get_ip_address()) + '\n' + time.strftime("%H:%M:%S") + ' ' + str(retVal))
